@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    metacloud.vicsnc.com/kind: ApplicationTemplate
+    metacloud.vicsnc.com/resource: Application
+    metacloud.vicsnc.com/resourceDef: application-def
+  name: template-application1
+data:
+  template: |
+    apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: clone-build-push-run-
+    spec:
+      pipelineRef:
+        name: clone-build-push
+      podTemplate:
+        securityContext:
+          fsGroup: 65532
+      workspaces:
+        - name: shared-data
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+        - name: docker-credentials
+          secret:
+            secretName: docker-credentials
+        - name: basic-auth-credentials
+          secret:
+            secretName: basic-auth-credentials
+        - name: kubeconfig-dir
+          secret:
+            secretName: kubeconfig
+        - name: manifest-dir
+          configMap:
+            name: manifest
+      params:
+        - name: repo-url
+          #value: git@github.com:vancheju-vicsnc/wiseon-test.git
+          value: https://github.com/vancheju-vicsnc/wiseon-test.git
+        - name: revision
+          value: main
+        - name: image-reference
+          # GCR
+          #value: gcr.io/devopscloud-376706/wiseon-test:v0.4
+          # Docker
+          value: vancheju2vicsnc/wiseon-test:v0.4
+        - name: script
+          value: ""
