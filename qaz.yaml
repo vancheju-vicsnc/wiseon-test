@@ -4,7 +4,7 @@ metadata:
   labels:
     metacloud.vicsnc.com/kind: ApplicationTemplate
     metacloud.vicsnc.com/resource: Application
-    metacloud.vicsnc.com/resourceDef: application2-def
+    metacloud.vicsnc.com/resourceDef: application-def
   name: template-application2
 data:
   template: |
